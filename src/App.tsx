@@ -1,25 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useCallback, useState } from "react";
+import data from "./data.json";
+import { TableData } from "./components/TableData/Table";
+import { JSONArray, JSONObject } from "./types";
+import { Container, StackDirection, SimpleGrid, Box } from "@chakra-ui/react";
+import { Pagination } from "./components/Pagination/Pagination";
 
 function App() {
+  const AppData = React.useMemo(() => data, []);
+  const rowsPerPage = 10;
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const indexOfLastData = currentPage * rowsPerPage;
+  const indexOfFirstData = indexOfLastData - rowsPerPage;
+  const currentPageData = AppData.slice(indexOfFirstData, indexOfLastData);
+  const NoPages = Math.ceil(AppData.length / rowsPerPage);
+
+  const MakeInfo = useCallback(
+    (item: JSONObject | JSONArray, direction: StackDirection = "column") => {
+      const vals = Object.values(item).slice(1);
+      const cols = direction === "column" ? 1 : vals.length;
+      const gap = direction === "row" ? 0 : 4;
+      return (
+        <SimpleGrid columns={cols} gap={gap}>
+          {vals.map((itemKey, i) => (
+            <Box key={i}>
+              {typeof itemKey !== "object" ? itemKey : MakeInfo(itemKey)}
+            </Box>
+          ))}
+        </SimpleGrid>
+      );
+    },
+    []
+  );
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxW="container.xl">
+      <TableData
+        Info={MakeInfo}
+        data={currentPageData}
+        indexOfFirstData={indexOfFirstData}
+      />
+      {AppData.length > rowsPerPage && (
+        <Pagination
+          noPages={NoPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+    </Container>
   );
 }
 
