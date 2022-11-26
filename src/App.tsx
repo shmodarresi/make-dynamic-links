@@ -33,7 +33,7 @@ function App() {
     []
   );
   return (
-    <Container maxW="container.xl">
+    <>
       <TableData
         Info={MakeInfo}
         data={currentPageData}
@@ -46,7 +46,7 @@ function App() {
           setCurrentPage={setCurrentPage}
         />
       )}
-    </Container>
+    </>
   );
 }
 
