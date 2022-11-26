@@ -2,7 +2,6 @@ import {
   Box,
   Checkbox,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
@@ -17,13 +16,13 @@ import {
 import React, { ReactNode, useState } from "react";
 import { JSONArray, JSONObject } from "../../types";
 
-export interface ListProps {
+export interface TableDataProps {
   data: JSONArray;
   indexOfFirstData: number;
   Info: (obj: JSONObject) => ReactNode;
 }
 
-export const TableData: React.FC<ListProps> = ({
+export const TableData: React.FC<TableDataProps> = ({
   data,
   indexOfFirstData,
   Info,

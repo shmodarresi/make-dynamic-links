@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react";
 import data from "./data.json";
-import { TableData } from "./components/TableData/Table";
+import { TableData } from "./components/TableData/TableData";
 import { JSONArray, JSONObject } from "./types";
-import { Container, StackDirection, SimpleGrid, Box } from "@chakra-ui/react";
+import { StackDirection, SimpleGrid, Box } from "@chakra-ui/react";
 import { Pagination } from "./components/Pagination/Pagination";
 
 function App() {
