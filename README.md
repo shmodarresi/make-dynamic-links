@@ -2,6 +2,7 @@
 
 ### Sample Data: `data.json` containing 111 rows
 
+
 ## Available Scripts
 
 In the project directory, you can run:
