@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import data from "./data.json";
 import { TableData } from "./components/TableData/TableData";
-import { JSONArray, JSONObject } from "./types";
 import { StackDirection, SimpleGrid, Box } from "@chakra-ui/react";
 import { Pagination } from "./components/Pagination/Pagination";
 
@@ -16,7 +15,7 @@ function App() {
   const NoPages = Math.ceil(AppData.length / rowsPerPage);
 
   const MakeInfo = useCallback(
-    (item: JSONObject | JSONArray, direction: StackDirection = "column") => {
+    <T extends {_id: number},>(item: T, direction: StackDirection = "column") => {
       const vals = Object.values(item).slice(1);
       const cols = direction === "column" ? 1 : vals.length;
       const gap = direction === "row" ? 0 : 4;

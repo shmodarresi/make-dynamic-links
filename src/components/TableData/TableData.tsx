@@ -13,31 +13,36 @@ import {
   HStack,
   Container,
 } from "@chakra-ui/react";
-import React, { ReactNode, useState } from "react";
-import { JSONArray, JSONObject } from "../../types";
+import React, { ReactNode, useMemo, useState } from "react";
 
-export interface TableDataProps {
-  data: JSONArray;
+export interface TableDataProps<T extends {_id: number}> {
+  data: T[];
   indexOfFirstData: number;
-  Info: (obj: JSONObject) => ReactNode;
+  Info: (item: T) => ReactNode;
 }
 
-export const TableData: React.FC<TableDataProps> = ({
+export const TableData = <T extends {_id: number},>({
   data,
   indexOfFirstData,
   Info,
-}) => {
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    if (e.target.checked) {
-      setSelectedItems([...selectedItems, index]);
-    } else {
-      setSelectedItems(selectedItems.filter((i) => i !== index));
-    }
+}: TableDataProps<T>) => {
+
+  const [checkedItems, setCheckedItems] = useState<number[]>([]);
+
+  const handleChange = (index: number) => {
+    setCheckedItems((prevCheckedItems) => {
+      if (prevCheckedItems.includes(index)) {
+        return prevCheckedItems.filter((itemIndex) => itemIndex !== index);
+      } else {
+        return [...prevCheckedItems, index];
+      }
+    });
   };
+
+  const checkedItemIndexes = useMemo(
+    () => checkedItems.join(", "),
+    [checkedItems]
+  );
 
   return (
     <>
@@ -45,9 +50,9 @@ export const TableData: React.FC<TableDataProps> = ({
         <HStack>
           <Heading size="md">Selected Items:</Heading>
           <Text as="span">
-            {selectedItems.length === 0
+            {checkedItemIndexes.length === 0
               ? "No Item is Selected"
-              : selectedItems.join(", ")}
+              : checkedItemIndexes}
           </Text>
         </HStack>
       </Box>
@@ -65,8 +70,8 @@ export const TableData: React.FC<TableDataProps> = ({
                 <Tr className="row" key={indexOfFirstData + index}>
                   <Td>
                     <Checkbox
-                      onChange={(e) =>
-                        handleChange(e, indexOfFirstData + index)
+                      onChange={() =>
+                        handleChange(indexOfFirstData + index)
                       }
                     />
                   </Td>
